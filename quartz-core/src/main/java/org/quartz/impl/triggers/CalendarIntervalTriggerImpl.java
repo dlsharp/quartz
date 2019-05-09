@@ -514,8 +514,18 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger<CalendarInterva
 
         while (nextFireTime != null && calendar != null
                 && !calendar.isTimeIncluded(nextFireTime.getTime())) {
-            
-            nextFireTime = getFireTimeAfter(nextFireTime);
+
+            switch(repeatIntervalUnit) {
+                case DAY:
+                case WEEK:
+                case MONTH:
+                case YEAR:
+                    break;
+                default:
+                    nextFireTime = getFireTimeAfter(nextFireTime);
+                    break;
+            }
+
 
             if(nextFireTime == null)
                 break;
@@ -839,6 +849,10 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger<CalendarInterva
                 }
                 time = sTime.getTime();
             }
+
+            //check if time is a holiday, and apply holiday policy
+
+
         } // case of interval of a day or greater
         
         if (!ignoreEndTime && (endMillis <= time.getTime())) {
